@@ -31,11 +31,11 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - demo-riz
+    - demo-riz.probuy.me
       #secretName: my-cert-secret  # Reference to your SSL certificate
     secretName: service1-tls-wpdpr # Reference to your SSL certificate
   rules:
-  - host: demo-riz
+  - host: demo-riz.probuy.me
     http:
       paths:
         #- path: /service1
