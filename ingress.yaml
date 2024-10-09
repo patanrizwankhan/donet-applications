@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: service1-ingress
   namespace: probuyme
+  labels:
+    app: service1
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt"
     #nginx.ingress.kubernetes.io/custom-http-errors: "404,500,502,503"
