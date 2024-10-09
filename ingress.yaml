@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: service1-ingress
+  namespace: probuyme
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    #nginx.ingress.kubernetes.io/custom-http-errors: "404,500,502,503"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/hsts: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/hsts-include-subdomains: "true"
+    nginx.ingress.kubernetes.io/x-forwarded-for: "true"
+    nginx.ingress.kubernetes.io/x-forwarded-proto: "true"
+    nginx.ingress.kubernetes.io/app-root: /service2
+    #nginx.ingress.kubernetes.io/app-root: /swagger/index.html
+    #cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    #acme.cert-manager.io/http01-ingress-class: "nginx"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/enable-access-log: "true"
+    nginx.ingress.kubernetes.io/error-log-level: "info"
+      #nginx.ingress.kubernetes.io/server-snippet: "ssl_protocols TLSv1.3;\nssl_ciphers HIGH:MEDIUM:!MD5:!RC4;\n"
+    #alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - demo-riz
+      #secretName: my-cert-secret  # Reference to your SSL certificate
+    secretName: service1-tls-wpdpr # Reference to your SSL certificate
+  rules:
+  - host: demo-riz
+    http:
+      paths:
+        #- path: /service1
+      - path: /service1
+        pathType: Prefix
+        backend:
+          service:
+            name: service1-service
+            port:
+              number: 8443
+              #- path: /service2
+      - path: /service2
+        pathType: Prefix
+        backend:
+          service:
+            name: service2-service
+            port:
+              number: 8443
