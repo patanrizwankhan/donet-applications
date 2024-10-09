@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service1-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: service1
+  template:
+    metadata:
+      labels:
+        app: service1
+    spec:
+      containers:
+      - name: service1
+        image: patanrizwankhan/service1:v14.0
+        ports:
+        - containerPort: 5124
+          #- containerPort: 443
+        volumeMounts:
+        - name: tls-secret
+          mountPath: /etc/ssl/certs  # Path where the certificate will be mounted
+          readOnly: true
+      volumes:
+      - name: tls-secret
+        secret:
+          secretName: service1-tls-wpdpr  # Name of the Kubernetes secret
